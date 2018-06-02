@@ -5,13 +5,15 @@ import {
   Text,
   View,
   FlatList,
-  ScrollView
+  ScrollView,
+  LayoutAnimation
 } from "react-native";
 
 // import LinearGradient from "react-native-linear-gradient";
 import { ORANGE, PINK, WHITE, GREYBG } from "../../styles";
 import UpcomingLisItem from "../components/UpcomingLisItem";
 import NowListItem from "../components/NowListItem";
+import Services from "../services";
 
 // provides a way to redenr contet for andropid and ios
 // const instructions = Platform.select({
@@ -23,8 +25,30 @@ import NowListItem from "../components/NowListItem";
 
 export default class MovieList extends Component {
   state = {
-    upcoming: [{ id: 0, title: "" }, { id: 1, title: "" }, { id: 2, title: "" }]
+    upcoming: [
+      { id: 0, title: "" },
+      { id: 1, title: "" },
+      { id: 2, title: "" }
+    ],
+    nowPlaying: [
+      { id: 0, title: "" },
+      { id: 1, title: "" },
+      { id: 2, title: "" }
+    ]
   };
+
+  componentDidMount() {
+    Services.getUpcomingMovies().then(response => {
+      this.setState({ upcoming: response.results });
+    });
+    Services.getNowPlaying().then(response => {
+      this.setState({ nowplaying: response.results });
+    });
+  }
+  componentWillUpdate() {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+  }
+
   keyExtractor = item => {
     `item.id`;
   };
@@ -45,7 +69,7 @@ export default class MovieList extends Component {
         <View style={styles.listcontainer}>
           <Text>NOW</Text>
           <FlatList
-            data={this.state.upcoming}
+            data={this.state.nowPlaying}
             extraData={this.state}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderNowPLaying}
