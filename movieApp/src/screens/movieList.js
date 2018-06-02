@@ -1,9 +1,17 @@
 import React, { Component } from "react";
-import { Platform, StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  ScrollView
+} from "react-native";
 
 // import LinearGradient from "react-native-linear-gradient";
 import { ORANGE, PINK, WHITE, GREYBG } from "../../styles";
 import UpcomingLisItem from "../components/UpcomingLisItem";
+import NowListItem from "../components/NowListItem";
 
 // provides a way to redenr contet for andropid and ios
 // const instructions = Platform.select({
@@ -15,22 +23,16 @@ import UpcomingLisItem from "../components/UpcomingLisItem";
 
 export default class MovieList extends Component {
   state = {
-    upcoming: [
-      { id: 0, title: "test0" },
-      { id: 1, title: "test1" },
-      { id: 2, title: "test2" },
-      { id: 3, title: "test3" },
-      { id: 4, title: "test4" },
-      { id: 5, title: "test5" }
-    ]
+    upcoming: [{ id: 0, title: "" }, { id: 1, title: "" }, { id: 2, title: "" }]
   };
   keyExtractor = item => {
     `item.id`;
   };
   renderUpcoming = ({ item }) => <UpcomingLisItem data={item} />;
+  renderNowPLaying = ({ item }) => <NowListItem data={item} />;
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Text style={styles.title}>MOVIES</Text>
         <FlatList
           data={this.state.upcoming}
@@ -39,7 +41,18 @@ export default class MovieList extends Component {
           renderItem={this.renderUpcoming}
           horizontal
         />
-      </View>
+
+        <View style={styles.listcontainer}>
+          <Text>NOW</Text>
+          <FlatList
+            data={this.state.upcoming}
+            extraData={this.state}
+            keyExtractor={this.keyExtractor}
+            renderItem={this.renderNowPLaying}
+            horizontal
+          />
+        </View>
+      </ScrollView>
     );
   }
 }
