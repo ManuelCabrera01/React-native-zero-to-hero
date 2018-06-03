@@ -1,27 +1,19 @@
 import React, { Component } from "react";
 import {
-  Platform,
   StyleSheet,
   Text,
-  View,
   FlatList,
   ScrollView,
-  LayoutAnimation
+  LayoutAnimation,
+  View
 } from "react-native";
 
-// import LinearGradient from "react-native-linear-gradient";
 import { ORANGE, PINK, WHITE, GREYBG } from "../../styles";
-import UpcomingLisItem from "../components/UpcomingLisItem";
-import NowListItem from "../components/NowListItem";
-import Services from "../services";
 
-// provides a way to redenr contet for andropid and ios
-// const instructions = Platform.select({
-//   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
-//   android:
-//     "Double tap R on your keyboard to reload,\n" +
-//     "Shake or press menu button for dev menu"
-// });
+import UpcomingListItem from "../components/UpcomingLisItem";
+import NowListItem from "../components/NowListItem";
+
+import Services from "../services";
 
 export default class MovieList extends Component {
   state = {
@@ -30,7 +22,7 @@ export default class MovieList extends Component {
       { id: 1, title: "" },
       { id: 2, title: "" }
     ],
-    nowPlaying: [
+    nowplaying: [
       { id: 0, title: "" },
       { id: 1, title: "" },
       { id: 2, title: "" }
@@ -45,15 +37,17 @@ export default class MovieList extends Component {
       this.setState({ nowplaying: response.results });
     });
   }
+
   componentWillUpdate() {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }
 
-  keyExtractor = item => {
-    `item.id`;
-  };
-  renderUpcoming = ({ item }) => <UpcomingLisItem data={item} />;
-  renderNowPLaying = ({ item }) => <NowListItem data={item} />;
+  keyExtractor = item => `${item.id}`;
+
+  renderUpcoming = ({ item }) => <UpcomingListItem data={item} />;
+
+  renderNowPlaying = ({ item }) => <NowListItem data={item} />;
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -65,14 +59,13 @@ export default class MovieList extends Component {
           renderItem={this.renderUpcoming}
           horizontal
         />
-
         <View style={styles.listcontainer}>
           <Text>NOW</Text>
           <FlatList
-            data={this.state.nowPlaying}
+            data={this.state.nowplaying}
             extraData={this.state}
             keyExtractor={this.keyExtractor}
-            renderItem={this.renderNowPLaying}
+            renderItem={this.renderNowPlaying}
             horizontal
           />
         </View>
@@ -84,7 +77,6 @@ export default class MovieList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
     backgroundColor: GREYBG,
     paddingLeft: 20
   },
